@@ -1,0 +1,17 @@
+{
+  "name": "vulnerable-demo-app",
+  "version": "1.0.0",
+  "description": "Deliberately vulnerable Node.js application for SCA demo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "lodash": "4.17.15",
+    "axios": "0.21.1",
+    "minimist": "1.2.0",
+    "node-fetch": "2.6.0",
+    "serialize-javascript": "3.0.0",
+    "express": "4.17.1"
+  }
+}
