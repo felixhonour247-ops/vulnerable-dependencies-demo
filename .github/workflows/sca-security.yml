@@ -1,0 +1,44 @@
+name: SCA — Vulnerable Dependencies
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  audit:
+    name: npm audit Vulnerability Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run npm audit
+        run: npm audit --production --json > audit-results.json
+        continue-on-error: true
+
+      - name: Check for vulnerabilities
+        run: |
+          if npm audit --production | grep -q "CRITICAL"; then
+            echo "❌ CRITICAL vulnerabilities found - blocking deployment"
+            exit 1
+          fi
+          if npm audit --production | grep -q "HIGH"; then
+            echo "⚠️ HIGH vulnerabilities found - blocking deployment"
+            exit 1
+          fi
+
+      - name: Upload audit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-results
+          path: audit-results.json
